@@ -1,7 +1,7 @@
-{   "homeLocation": {
-        "locationName": "Peja",
-        "latitude": 42.6593,
-        "longitude": 20.2887
+{   "originLocation": {
+        "locationName": "Geo Located Place",
+        "latitude": 42.6793,
+        "longitude": 21.0516
     }
     ,
     "locations": [
@@ -41,10 +41,21 @@
             "longitude": 20.7436
         },
         {
-            "locationName": "Ferizaj",
-            "latitude": 42.3702,
-            "longitude": 21.1483
+            "locationName": "Tirana",
+            "latitude": 41.3275,
+            "longitude": 19.8187
+        },
+        {
+            "locationName": "Tetova",
+            "latitude": 42.0069,
+            "longitude": 20.9715
+        },
+        {
+            "locationName": "Shkupi",
+            "latitude": 41.9981,
+            "longitude": 21.4254
         }
+        
         
     ]
 }

@@ -10,13 +10,15 @@ class Location {
   double latitude;
   double longitude;
 
-  Marker toMarker(String markerId) {
+  Marker toMarker(String markerId, bool originLocation) {
     // markerId could be a uid if its the location of a user.
     return Marker(
         markerId: MarkerId(markerId),
         position: LatLng(latitude, longitude),
         infoWindow: InfoWindow(title: locationName),
-        icon: BitmapDescriptor.defaultMarker);
+        icon: originLocation
+            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
+            : BitmapDescriptor.defaultMarker);
   }
 
   LatLng toLatLng() {
@@ -24,7 +26,6 @@ class Location {
   }
 
   CameraPosition toCameraPosition() {
-    return CameraPosition(
-        target: LatLng(latitude, longitude), zoom: 19.151926040649414);
+    return CameraPosition(target: LatLng(latitude, longitude), zoom: 8);
   }
 }
