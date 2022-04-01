@@ -1,23 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:map_demo/network/google_directions_api/directions_repository.dart';
+import 'package:map_demo/models/location.dart';
 
 class GoogleMapWidget extends StatelessWidget {
   const GoogleMapWidget({
     Key? key,
     required this.controller,
     required this.initialLocation,
-    required this.locationData,
     required this.originLocationData,
     required this.mapSet,
-    required this.polylinePoints,
   }) : super(key: key);
   final Completer<GoogleMapController> controller;
   final LatLng initialLocation;
-  final List locationData;
   final dynamic originLocationData;
   final Set<Marker> mapSet;
-  final List<LatLng> polylinePoints;
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +24,37 @@ class GoogleMapWidget extends StatelessWidget {
       color: Colors.red,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: initialLocation,
-        ),
-        onMapCreated: (GoogleMapController controller) {
-          this.controller.complete(controller);
-        },
-        markers: mapSet,
-        polylines: <Polyline>{
-          Polyline(
-            polylineId: const PolylineId("Polyline"),
-            points: polylinePoints,
-            width: 3,
-            jointType: JointType.round,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            zoomControlsEnabled: false,
+            initialCameraPosition: CameraPosition(
+              target: initialLocation,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              this.controller.complete(controller);
+            },
+            markers: mapSet,
+            polylines: <Polyline>{
+              const Polyline(
+                polylineId: PolylineId("Polyline"),
+                color: Colors.red,
+                points: [],
+                width: 3,
+                jointType: JointType.round,
+              ),
+            },
           ),
-        },
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 25),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Row(), Row()],
+            ),
+          )
+        ],
       ),
     );
   }
