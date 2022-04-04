@@ -6,7 +6,7 @@ import 'package:map_demo/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class DirectionRepository {
-  assignTravelMode(TravelMode travelMode) {
+  _assignTravelMode(TravelMode travelMode) {
     switch (travelMode) {
       case TravelMode.walking:
         return "WALKING";
@@ -33,7 +33,7 @@ class DirectionRepository {
     Map<String, String> baseQueryParams = {
       "origin": '${origin.latitude},${origin.longitude}',
       "destination": '${destination.latitude}, ${destination.longitude}',
-      "mode": assignTravelMode(travelMode),
+      "mode": _assignTravelMode(travelMode),
       "key": googleApiKey
     };
 

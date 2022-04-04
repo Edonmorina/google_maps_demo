@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:map_demo/network/google_directions_api/directions_repository.dart';
-import 'package:map_demo/models/location.dart';
+import 'package:map_demo/providers/google_maps_provider.dart';
+import 'package:provider/provider.dart';
 
 class GoogleMapWidget extends StatelessWidget {
   const GoogleMapWidget({
@@ -20,42 +19,28 @@ class GoogleMapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: initialLocation,
-            ),
-            onMapCreated: (GoogleMapController controller) {
-              this.controller.complete(controller);
-            },
-            markers: mapSet,
-            polylines: <Polyline>{
-              const Polyline(
-                polylineId: PolylineId("Polyline"),
-                color: Colors.red,
-                points: [],
-                width: 3,
-                jointType: JointType.round,
-              ),
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 25),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Row(), Row()],
-            ),
-          )
-        ],
+    return GoogleMap(
+      zoomControlsEnabled: false,
+      compassEnabled: false,
+      initialCameraPosition: CameraPosition(
+        target: initialLocation,
+        zoom: 17,
       ),
+      onMapCreated: (GoogleMapController controller) {
+        this.controller.complete(controller);
+        controller.setMapStyle(
+            Provider.of<GoogleMapsProvider>(context, listen: false).mapStyle);
+      },
+      markers: mapSet,
+      polylines: <Polyline>{
+        const Polyline(
+          polylineId: PolylineId("Polyline"),
+          color: Colors.red,
+          points: [],
+          width: 3,
+          jointType: JointType.round,
+        ),
+      },
     );
   }
 }

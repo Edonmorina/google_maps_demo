@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:map_demo/screens/your_community/Tabs/explore_screen.dart';
-import 'package:map_demo/screens/your_community/Tabs/highlights_screen.dart';
-import 'package:map_demo/screens/your_community/Tabs/your_feed.dart';
+import 'package:map_demo/screens/your_community/highlights_screen.dart';
+import 'package:map_demo/screens/your_community/explore_screen.dart';
+import 'package:map_demo/screens/your_community/your_feed_screen.dart';
 import 'package:map_demo/utils/global_variables.dart';
 import 'package:map_demo/widgets/app_bar.dart' as custom_app_bar;
 

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Location {
@@ -10,15 +12,17 @@ class Location {
   double latitude;
   double longitude;
 
-  Marker toMarker(String markerId, bool originLocation) {
+  Marker toMarker(
+      {required String markerId,
+      bool originLocation = false,
+      required Uint8List imageByteData}) {
     // markerId could be a uid if its the location of a user.
+
     return Marker(
         markerId: MarkerId(markerId),
         position: LatLng(latitude, longitude),
         infoWindow: InfoWindow(title: locationName),
-        icon: originLocation
-            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
-            : BitmapDescriptor.defaultMarker);
+        icon: BitmapDescriptor.fromBytes(imageByteData));
   }
 
   LatLng toLatLng() {
@@ -26,6 +30,6 @@ class Location {
   }
 
   CameraPosition toCameraPosition() {
-    return CameraPosition(target: LatLng(latitude, longitude), zoom: 8);
+    return CameraPosition(target: LatLng(latitude, longitude), zoom: 15);
   }
 }

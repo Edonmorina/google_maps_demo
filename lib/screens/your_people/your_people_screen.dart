@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:map_demo/screens/your_people/Tabs/activity_screen.dart';
-import 'package:map_demo/screens/your_people/Tabs/groups_screen.dart';
-import 'package:map_demo/screens/your_people/Tabs/invitations_screen.dart';
-import 'package:map_demo/utils/global_variables.dart';
+import 'package:map_demo/screens/your_people/activity_screen.dart';
+import 'package:map_demo/screens/your_people/groups_screen.dart';
+import 'package:map_demo/screens/your_people/invitations_screen.dart';
 import 'package:map_demo/utils/styles.dart';
 import 'package:map_demo/widgets/app_bar.dart' as custom_app_bar;
 
 class YourPeopleScreen extends StatefulWidget {
   const YourPeopleScreen({Key? key}) : super(key: key);
 
-  final _appBarTitle = "Your people";
+  final _appBarTitle = "Your People";
 
   @override
   State<YourPeopleScreen> createState() => _YourPeopleScreenState();
@@ -34,12 +33,8 @@ class _YourPeopleScreenState extends State<YourPeopleScreen>
     super.dispose();
   }
 
-  int _tabIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    print(_tabIndex);
-
     final kYourPeopleTabs = <Tab>[
       const Tab(
         child: Text(
@@ -71,8 +66,8 @@ class _YourPeopleScreenState extends State<YourPeopleScreen>
             child: IconButton(
                 onPressed: () {},
                 icon: const Icon(
-                  Icons.person_add_alt_1,
-                  size: 36,
+                  Icons.person_add,
+                  size: 30,
                   color: Colors.black87,
                 )),
           )

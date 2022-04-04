@@ -14,16 +14,13 @@ class YourActivity extends StatefulWidget {
   State<YourActivity> createState() => _YourActivityState();
 }
 
-class _YourActivityState extends State<YourActivity>
-    with AutomaticKeepAliveClientMixin {
+class _YourActivityState extends State<YourActivity> {
   final Completer<GoogleMapController> _controller = Completer();
 
   List _locationData = [];
+  Set<Marker> _markerSet = {};
 
   dynamic _originLocationData;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -40,19 +37,26 @@ class _YourActivityState extends State<YourActivity>
       _locationData = data["locations"];
       _originLocationData = data["originLocation"];
     });
+
+    var markerSet = await convertListToMarkerSet(
+        list: _locationData, originLocation: _originLocationData);
+
+    setState(() {
+      _markerSet = markerSet;
+    });
   }
 
-  // Future<void> _goToOrigin() async {
-  //   final GoogleMapController controller = await _controller.future;
-  //   controller.animateCamera(CameraUpdate.newCameraPosition(
-  //     Location(
-  //             locationName: _originLocationData["locationName"],
-  //             latitude: _originLocationData["latitude"],
-  //             longitude: _originLocationData["longitude"])
-  //         .toCameraPosition(),
-  //   ));
-  //   controller.showMarkerInfoWindow(const MarkerId("Origin"));
-  // }
+  Future<void> _goToOrigin() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      Location(
+              locationName: _originLocationData["locationName"],
+              latitude: _originLocationData["latitude"],
+              longitude: _originLocationData["longitude"])
+          .toCameraPosition(),
+    ));
+    controller.showMarkerInfoWindow(const MarkerId("Origin"));
+  }
 
   // Future<void> _goToLocation(int index) async {
   //   final GoogleMapController controller = await _controller.future;
@@ -80,10 +84,10 @@ class _YourActivityState extends State<YourActivity>
             locationName: "OriginLatLng",
             latitude: (_originLocationData != null)
                 ? _originLocationData["latitude"]
-                : 0.0,
+                : 40.730449,
             longitude: (_originLocationData != null)
                 ? _originLocationData["longitude"]
-                : 0.0)
+                : -73.995642)
         .toLatLng();
     // LatLng destLatLng = (directionIndex < _locationData.length)
     //     ? Location(
@@ -93,26 +97,11 @@ class _YourActivityState extends State<YourActivity>
     //         .toLatLng()
     //     : originLatLng;
 
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: double.infinity,
-      color: Colors.blueGrey,
-      child: GoogleMapWidget(
-        controller: _controller,
-        initialLocation: originLatLng,
-        originLocationData: _originLocationData,
-        mapSet: convertListToMarkerSet(
-            list: (_locationData.isNotEmpty)
-                ? _locationData
-                : [
-                    {
-                      "locationName": 'Unknown',
-                      "latitude": 0.0,
-                      "longitude": 0.0
-                    }
-                  ],
-            originLocation: _originLocationData),
-      ),
+    return GoogleMapWidget(
+      controller: _controller,
+      initialLocation: originLatLng,
+      originLocationData: _originLocationData,
+      mapSet: _markerSet,
     );
   }
 }

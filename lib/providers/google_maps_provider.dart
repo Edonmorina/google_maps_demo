@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
-class GoogleMapsProvder with ChangeNotifier {
-  int _directionIndex = 3;
+class GoogleMapsProvider with ChangeNotifier {
+  String? _mapStyle;
 
-  int get directionIndex => _directionIndex;
+  String? get mapStyle => _mapStyle;
 
-  void setDirectionIndex(int index) {
-    _directionIndex = index;
-    notifyListeners();
+  void setMapStyle() {
+    rootBundle
+        .loadString('assets/google_maps_style.txt')
+        .then((string) => _mapStyle = string);
   }
 }

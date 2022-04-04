@@ -4,6 +4,8 @@ import 'package:map_demo/screens/your_community/your_community_screen.dart';
 import 'package:map_demo/screens/your_people/your_people_screen.dart';
 import 'package:map_demo/utils/styles.dart';
 
+const double kYouActivityAppBarHeight = 100;
+
 final kHomeScreenPages = <Widget>[
   const YouScreen(),
   const YourPeopleScreen(),
