@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:map_demo/screens/you/your_activity_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:map_demo/Widgets/google_map_widget.dart';
+import 'package:map_demo/models/location.dart';
+import 'package:map_demo/providers/google_maps_provider.dart';
 import 'package:map_demo/utils/global_variables.dart';
 import 'package:map_demo/widgets/you_screen_buttons.dart';
+import 'dart:async';
+import 'dart:convert' as convert;
+import 'package:flutter/services.dart';
+import 'package:map_demo/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class YouScreen extends StatefulWidget {
   const YouScreen({Key? key}) : super(key: key);
@@ -15,15 +23,59 @@ class _YouScreenState extends State<YouScreen>
   @override
   bool get wantKeepAlive => true;
 
+  final Completer<GoogleMapController> _controller = Completer();
+
+  List _locationData = [];
+  Set<Marker> _markerSet = {};
+  dynamic _originLocationData;
+
+  @override
+  void initState() {
+    super.initState();
+    _readLocationDataJson();
+  }
+
+  Future<void> _readLocationDataJson() async {
+    final String response =
+        await rootBundle.loadString('assets/locationData.json');
+    final data = await convert.json.decode(response);
+
+    setState(() {
+      _locationData = data["locations"];
+      _originLocationData = data["originLocation"];
+    });
+
+    var markerSet = await convertListToMarkerSet(
+        list: _locationData, originLocation: _originLocationData);
+
+    setState(() {
+      _markerSet = markerSet;
+    });
+  }
+
   @override
   //ignore: must_call_super
   Widget build(BuildContext context) {
+    LatLng originLatLng = Location(
+            locationName: "OriginLatLng",
+            latitude: (_originLocationData != null)
+                ? _originLocationData["latitude"]
+                : 40.730449,
+            longitude: (_originLocationData != null)
+                ? _originLocationData["longitude"]
+                : -73.995642)
+        .toLatLng();
     return Scaffold(
       body: Stack(
         children: [
-          const Align(
+          Align(
             alignment: Alignment.center,
-            child: YourActivity(),
+            child: GoogleMapWidget(
+              controller: _controller,
+              initialLocation: originLatLng,
+              originLocationData: _originLocationData,
+              mapSet: _markerSet,
+            ),
           ),
           Align(
             alignment: Alignment.topCenter,
@@ -65,17 +117,42 @@ class _YouScreenState extends State<YouScreen>
             ),
           ),
           Positioned(
-              left: 5,
-              bottom: 10,
-              child: Row(
-                children: const [
-                  YouScreenButton(title: "SOS", iconData: Icons.add_alert),
-                  YouScreenButton(
-                    title: "Add Check In",
-                    iconData: Icons.add,
+            left: 5,
+            bottom: 10,
+            child: Row(
+              children: const [
+                YouScreenButton(title: "SOS", iconData: Icons.add_alert),
+                YouScreenButton(
+                  title: "Add Check In",
+                  iconData: Icons.add,
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 10,
+            bottom: 10,
+            child: InkWell(
+              onTap: () {
+                Provider.of<GoogleMapsProvider>(context, listen: false)
+                    .goToOrigin(_controller, _originLocationData);
+              },
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.location_on,
+                    color: Colors.white,
                   ),
-                ],
-              ))
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -30,6 +30,6 @@ class Location {
   }
 
   CameraPosition toCameraPosition() {
-    return CameraPosition(target: LatLng(latitude, longitude), zoom: 15);
+    return CameraPosition(target: LatLng(latitude, longitude), zoom: 17);
   }
 }
